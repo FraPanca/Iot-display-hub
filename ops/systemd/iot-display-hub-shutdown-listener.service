@@ -1,8 +1,7 @@
 [Unit]
 Description=IoT Display Hub - listener shutdown MQTT (host)
 After=network-online.target iot-display-hub-docker.service
-Wants=network-online.target
-Requires=iot-display-hub-docker.service
+Wants=network-online.target iot-display-hub-docker.service
 
 [Service]
 Type=simple
