@@ -1,0 +1,11 @@
+user display-esp32
+topic write display/cyd-01/screen/current
+topic write display/cyd-01/event/#
+topic write display/cyd-01/status
+topic read display/cyd-01/data/#
+
+user display-server
+topic read display/cyd-01/screen/current
+topic read display/cyd-01/event/#
+topic read display/cyd-01/status
+topic write display/cyd-01/data/#

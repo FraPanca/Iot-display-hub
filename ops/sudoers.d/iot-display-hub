@@ -1,0 +1,1 @@
+francesco ALL=(root) NOPASSWD: /home/francesco/iot-display-hub/ops/scripts/shutdown.sh

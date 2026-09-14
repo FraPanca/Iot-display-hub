@@ -1,0 +1,22 @@
+# ENV e secrets
+.env
+*/.env
+
+# Mosquitto password
+mosquitto/config/passwordfile
+
+# Node modules
+node_modules/
+*/node_modules/
+
+# Log
+mosquitto/log/*
+mosquitto/data/*
+!mosquitto/log/.gitkeep
+!mosquitto/data/.gitkeep
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
