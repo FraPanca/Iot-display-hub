@@ -11,7 +11,7 @@ set -a
 source "$ENV_FILE"
 set +a
 
-mosquitto_sub -h localhost -p 1883 -u "$MQTT_USER" -P "$MQTT_PASSWORD" -i shutdown-listener -t "$TOPIC" | while read -r payload; do
+mosquitto_sub -h localhost -p 1884 -u "$MQTT_USER" -P "$MQTT_PASSWORD" -i shutdown-listener -t "$TOPIC" | while read -r payload; do
   if echo "$payload" | grep -q '"target"[[:space:]]*:[[:space:]]*"pi"'; then
     log_line="shutdown_listener: comando shutdown ricevuto, esecuzione in corso"
     echo "$log_line"

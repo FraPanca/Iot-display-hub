@@ -13,8 +13,10 @@ log() {
 run() {
   if [ "$DRY_RUN" = "1" ]; then
     log "DRY_RUN: $*"
-  else
-    "$@"
+    return 0
+  fi
+  if ! "$@"; then
+    log "attenzione: comando fallito, proseguo comunque: $*"
   fi
 }
 
