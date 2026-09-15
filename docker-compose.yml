@@ -1,0 +1,64 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    ports:
+      - "1884:1883"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    networks:
+      - iot-display-hub
+
+  mongodb:
+    image: mongo:7
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    volumes:
+      - /mnt/wd1tb/iot-display-hub/mongodb:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--username", "${MONGO_ROOT_USER}", "--password", "${MONGO_ROOT_PASSWORD}", "--authenticationDatabase", "admin", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - iot-display-hub
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - /mnt/wd1tb/iot-display-hub/redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - iot-display-hub
+
+  server:
+    build:
+      context: ./server
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "3001:3000"
+    depends_on:
+      mosquitto:
+        condition: service_started
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - iot-display-hub
+
+networks:
+  iot-display-hub:
+    driver: bridge

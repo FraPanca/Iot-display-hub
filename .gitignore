@@ -15,6 +15,10 @@ mosquitto/data/*
 !mosquitto/log/.gitkeep
 !mosquitto/data/.gitkeep
 
+# Coverage test
+coverage/
+*/coverage/
+
 # IDE / OS
 .vscode/
 .idea/
