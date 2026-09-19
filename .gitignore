@@ -19,6 +19,9 @@ mosquitto/data/*
 coverage/
 */coverage/
 
+# Cache locale firmware OTA scaricato dal server, ri-scaricabile in ogni momento
+server/firmware-cache/
+
 # IDE / OS
 .vscode/
 .idea/
