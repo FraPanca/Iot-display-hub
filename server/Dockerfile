@@ -5,6 +5,7 @@ COPY package*.json ./
 RUN npm ci
 COPY src ./src
 COPY tests ./tests
+COPY jest.config.js ./
 
 # Stage 2: test, esegue lint e test con coverage, la build fallisce se falliscono
 FROM build AS test
