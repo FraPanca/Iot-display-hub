@@ -36,10 +36,10 @@ async function publishCurrentState() {
   const state = await getPlaybackState();
   const payload = buildPayload(state);
 
+  await publish(TOPICS.dataSpotify, payload, { qos: 1 });
+
   lastTrackId = payload.track_id;
   lastIsPlaying = payload.is_playing;
-
-  await publish(TOPICS.dataSpotify, payload, { qos: 1 });
 }
 
 async function checkForChangeAndPublish() {
@@ -51,10 +51,10 @@ async function checkForChangeAndPublish() {
     return;
   }
 
+  await publish(TOPICS.dataSpotify, payload, { qos: 1 });
+
   lastTrackId = payload.track_id;
   lastIsPlaying = payload.is_playing;
-
-  await publish(TOPICS.dataSpotify, payload, { qos: 1 });
 }
 
 async function start() {
