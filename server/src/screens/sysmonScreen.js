@@ -129,8 +129,9 @@ async function publishSysmon() {
     return;
   }
 
-  await redis.set(DEDUP_KEY, JSON.stringify(payload));
   await publish(TOPICS.dataSysmon, payload, { qos: 0 });
+
+  await redis.set(DEDUP_KEY, JSON.stringify(payload));
 }
 
 module.exports = { publishSysmon };
