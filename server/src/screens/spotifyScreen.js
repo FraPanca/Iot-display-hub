@@ -58,7 +58,11 @@ async function checkForChangeAndPublish() {
 }
 
 async function start() {
-  await publishCurrentState();
+  try {
+    await publishCurrentState();
+  } catch (err) {
+    console.error('Errore nella pubblicazione iniziale di stato Spotify', err.message);
+  }
 
   pollTimer = setInterval(() => {
     checkForChangeAndPublish().catch((err) => {
@@ -76,6 +80,7 @@ function stop() {
 
 async function handleControl(payload) {
   await sendControl(payload.action);
+  // L'aggiornamento visivo avviene alla ricezione del nuovo stato, non otticisticamente qui.
   await checkForChangeAndPublish();
 }
 

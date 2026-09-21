@@ -94,23 +94,33 @@ async function getPlaybackState() {
   return res.json();
 }
 
+async function checkControlResponse(res, action) {
+  if (!res.ok) {
+    throw new Error(`Comando Spotify '${action}' fallito: ${res.status}`);
+  }
+  return res;
+}
+
 async function togglePlayPause(headers) {
   const state = await getPlaybackState();
   const endpoint = state && state.is_playing ? 'pause' : 'play';
-  return fetch(`${API_BASE}/me/player/${endpoint}`, { method: 'PUT', headers });
+  const res = await fetch(`${API_BASE}/me/player/${endpoint}`, { method: 'PUT', headers });
+  return checkControlResponse(res, 'play_pause');
 }
 
 async function toggleShuffle(headers) {
   const state = await getPlaybackState();
   const next = !(state && state.shuffle_state);
-  return fetch(`${API_BASE}/me/player/shuffle?state=${next}`, { method: 'PUT', headers });
+  const res = await fetch(`${API_BASE}/me/player/shuffle?state=${next}`, { method: 'PUT', headers });
+  return checkControlResponse(res, 'shuffle');
 }
 
 async function toggleRepeat(headers) {
   const state = await getPlaybackState();
   const current = state ? state.repeat_state : 'off';
   const next = current === 'off' ? 'context' : 'off';
-  return fetch(`${API_BASE}/me/player/repeat?state=${next}`, { method: 'PUT', headers });
+  const res = await fetch(`${API_BASE}/me/player/repeat?state=${next}`, { method: 'PUT', headers });
+  return checkControlResponse(res, 'repeat');
 }
 
 async function sendControl(action) {
@@ -119,8 +129,14 @@ async function sendControl(action) {
 
   const actionHandlers = {
     play_pause: () => togglePlayPause(headers),
-    next: () => fetch(`${API_BASE}/me/player/next`, { method: 'POST', headers }),
-    previous: () => fetch(`${API_BASE}/me/player/previous`, { method: 'POST', headers }),
+    next: async () => checkControlResponse(
+      await fetch(`${API_BASE}/me/player/next`, { method: 'POST', headers }),
+      'next',
+    ),
+    previous: async () => checkControlResponse(
+      await fetch(`${API_BASE}/me/player/previous`, { method: 'POST', headers }),
+      'previous',
+    ),
     shuffle: () => toggleShuffle(headers),
     repeat: () => toggleRepeat(headers),
   };

@@ -57,13 +57,14 @@ async function checkForUpdate() {
 
     const buffer = await downloadFirmware(downloadUrl);
     const checksumMd5 = computeMd5(buffer);
-    currentVersion = version;
 
     await publish(
       TOPICS.dataFirmware,
-      { version: currentVersion, checksum_md5: checksumMd5 },
+      { version, checksum_md5: checksumMd5 },
       { qos: 1, retain: true },
     );
+
+    currentVersion = version;
 
     console.log(`Nuova versione firmware rilevata e pubblicata: ${currentVersion}`);
   } catch (err) {
