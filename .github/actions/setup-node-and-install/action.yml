@@ -1,0 +1,24 @@
+name: Setup Node and install
+description: Installa Node.js con cache npm ed esegue npm ci nella directory indicata
+
+inputs:
+  working-directory:
+    description: Directory che contiene package.json e package-lock.json
+    default: server
+  node-version:
+    description: Versione di Node.js, allineata al Dockerfile
+    default: "20"
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: npm
+        cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: npm ci
