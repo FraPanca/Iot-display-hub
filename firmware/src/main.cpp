@@ -3,8 +3,10 @@
 void setup() {
   Serial.begin(115200);
   delay(2000);
-  Serial.printf("Flash: %u MB\n", ESP.getFlashChipSize() / 1048576);
-  Serial.printf("PSRAM: %u MB\n", ESP.getPsramSize() / 1048576);
 }
 
-void loop() {}
+void loop() {
+  Serial.printf("Flash: %u MB\n", ESP.getFlashChipSize() / 1048576);
+  Serial.printf("PSRAM: %u MB\n", ESP.getPsramSize() / 1048576);
+  delay(3000);
+}
