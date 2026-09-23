@@ -19,5 +19,6 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev
 COPY --from=test /app/src ./src
+COPY --from=test /app/scripts ./scripts
 EXPOSE 3000
 CMD ["node", "src/app.js"]
