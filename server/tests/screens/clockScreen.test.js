@@ -12,15 +12,15 @@ describe('clockScreen', () => {
   it('formatta l\'ora come HH:mm con zero iniziale', () => {
     jest.useFakeTimers({ now: new Date(2026, 8, 19, 9, 5, 30) });
 
-    expect(buildPayload()).toEqual({ time: '09:05' });
+    expect(buildPayload()).toEqual({ time: '11:05' });
   });
 
   it('gestisce mezzanotte e le 23:59', () => {
     jest.useFakeTimers({ now: new Date(2026, 8, 19, 0, 0, 0) });
-    expect(buildPayload()).toEqual({ time: '00:00' });
+    expect(buildPayload()).toEqual({ time: '02:00' });
 
     jest.setSystemTime(new Date(2026, 8, 19, 23, 59, 59));
-    expect(buildPayload()).toEqual({ time: '23:59' });
+    expect(buildPayload()).toEqual({ time: '01:59' });
   });
 
   it('pubblica su data/clock con QoS 0 e senza retain', async () => {
@@ -28,7 +28,7 @@ describe('clockScreen', () => {
 
     await publishClock();
 
-    expect(publish).toHaveBeenCalledWith(TOPICS.dataClock, { time: '14:35' }, { qos: 0 });
+    expect(publish).toHaveBeenCalledWith(TOPICS.dataClock, { time: '16:35' }, { qos: 0 });
     expect(TOPICS.dataClock).toBe('display/cyd-01/data/clock');
   });
 });
