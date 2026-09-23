@@ -7,6 +7,8 @@ const POLL_INTERVAL_MS = 5000;
 let pollTimer = null;
 let lastTrackId = null;
 let lastIsPlaying = null;
+let lastShuffle = null;
+let lastRepeat = null;
 
 function buildPayload(state) {
   if (!state || !state.item) {
@@ -40,13 +42,18 @@ async function publishCurrentState() {
 
   lastTrackId = payload.track_id;
   lastIsPlaying = payload.is_playing;
+  lastShuffle = payload.shuffle;
+  lastRepeat = payload.repeat;
 }
 
 async function checkForChangeAndPublish() {
   const state = await getPlaybackState();
   const payload = buildPayload(state);
 
-  const changed = payload.track_id !== lastTrackId || payload.is_playing !== lastIsPlaying;
+  const changed = payload.track_id !== lastTrackId
+    || payload.is_playing !== lastIsPlaying
+    || payload.shuffle !== lastShuffle
+    || payload.repeat !== lastRepeat;
   if (!changed) {
     return;
   }
@@ -55,6 +62,8 @@ async function checkForChangeAndPublish() {
 
   lastTrackId = payload.track_id;
   lastIsPlaying = payload.is_playing;
+  lastShuffle = payload.shuffle;
+  lastRepeat = payload.repeat;
 }
 
 async function start() {
