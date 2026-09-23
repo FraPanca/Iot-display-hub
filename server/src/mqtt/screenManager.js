@@ -3,9 +3,9 @@ const { SCREEN_CONFIG, spotifyScreen } = require('../screens');
 let activeScreenId = null;
 let activeTimer = null;
 
-async function publishSafe(publishFn) {
+async function publishSafe(publishFn, options) {
   try {
-    await publishFn();
+    await publishFn(options);
   } catch (err) {
     console.error('Errore durante la pubblicazione dati schermata', err.message);
   }
@@ -48,8 +48,9 @@ async function handleScreenChange(screenId) {
   activeScreenId = screenId;
 
   // Pubblica subito l'ultimo dato disponibile, così il display non resta vuoto
-  // in attesa del primo giro del timer.
-  await publishSafe(config.publish);
+  // in attesa del primo giro del timer. force: true bypassa la dedup di
+  // sysmonScreen (ignorato dagli altri screen, che non la usano).
+  await publishSafe(config.publish, { force: true });
 
   activeTimer = setInterval(() => {
     publishSafe(config.publish);
