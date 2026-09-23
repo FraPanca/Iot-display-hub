@@ -112,7 +112,9 @@ function hasSignificantChange(previous, next) {
   return JSON.stringify(previous.services) !== JSON.stringify(next.services);
 }
 
-async function publishSysmon() {
+async function publishSysmon(options = {}) {
+  const { force = false } = options;
+
   const payload = {
     cpu_percent: getCpuPercent(),
     mem_percent: getMemPercent(),
@@ -125,7 +127,7 @@ async function publishSysmon() {
   const cached = await redis.get(DEDUP_KEY);
   const previous = cached ? JSON.parse(cached) : null;
 
-  if (!hasSignificantChange(previous, payload)) {
+  if (!force && !hasSignificantChange(previous, payload)) {
     return;
   }
 
