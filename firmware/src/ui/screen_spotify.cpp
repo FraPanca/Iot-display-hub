@@ -16,6 +16,8 @@ lv_obj_t* coverImg = nullptr;
 lv_obj_t* titleLabel = nullptr;
 lv_obj_t* albumLabel = nullptr;
 lv_obj_t* playPauseLabel = nullptr;
+lv_obj_t* shuffleBtn = nullptr;
+lv_obj_t* loopBtn = nullptr;
 
 lv_img_dsc_t coverDsc;
 uint8_t* coverBuffer = nullptr;
@@ -26,9 +28,13 @@ void controlEventCb(lv_event_t* e) {
     mqtt_manager::publishSpotifyControl(action);
 }
 
-lv_obj_t* makeControlBtn(lv_obj_t* parent, const char* symbol, const char* action) {
+lv_obj_t* makeControlBtn(lv_obj_t* parent, const char* symbol, const char* action, bool isToggle = false) {
     lv_obj_t* btn = lv_btn_create(parent);
-    theme::styleButton(btn);
+    if (isToggle) {
+        theme::styleToggleButton(btn);
+    } else {
+        theme::styleButton(btn);
+    }
     lv_obj_add_event_cb(btn, controlEventCb, LV_EVENT_CLICKED, (void*)action);
 
     lv_obj_t* label = lv_label_create(btn);
@@ -127,15 +133,15 @@ void create(lv_obj_t* parent) {
     lv_obj_set_flex_flow(controlsRow, LV_FLEX_FLOW_ROW);
     lv_obj_set_flex_align(controlsRow, LV_FLEX_ALIGN_SPACE_EVENLY, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
 
-    // Ordine: shuffle, prev, play/pause, next, loop
-    makeControlBtn(controlsRow, LV_SYMBOL_SHUFFLE, "shuffle");
+    // Ordine richiesto: shuffle, prev, play/pause, next, loop
+    shuffleBtn = makeControlBtn(controlsRow, LV_SYMBOL_SHUFFLE, "shuffle", true);
     makeControlBtn(controlsRow, LV_SYMBOL_PREV, "previous");
 
     lv_obj_t* playPauseBtn = makeControlBtn(controlsRow, LV_SYMBOL_PLAY, "play_pause");
     playPauseLabel = lv_obj_get_child(playPauseBtn, 0);
 
     makeControlBtn(controlsRow, LV_SYMBOL_NEXT, "next");
-    makeControlBtn(controlsRow, LV_SYMBOL_LOOP, "repeat");
+    loopBtn = makeControlBtn(controlsRow, LV_SYMBOL_LOOP, "repeat", true);
 }
 
 void update(const String& payload) {
@@ -152,6 +158,9 @@ void update(const String& payload) {
     const char* title = doc["title"] | "";
     const char* album = doc["album"] | "";
     const char* artist = doc["artist"] | "";
+    bool shuffleOn = doc["shuffle"] | false;
+    const char* repeatMode = doc["repeat"] | "off";
+    bool loopOn = String(repeatMode) != "off";
 
     String trackId(trackIdC);
 
@@ -159,6 +168,8 @@ void update(const String& payload) {
         lv_label_set_text(titleLabel, "Nessuna riproduzione");
         lv_label_set_text(albumLabel, "");
         lv_label_set_text(playPauseLabel, LV_SYMBOL_PLAY);
+        lv_obj_clear_state(shuffleBtn, LV_STATE_CHECKED);
+        lv_obj_clear_state(loopBtn, LV_STATE_CHECKED);
         lastTrackId = "";
         return;
     }
@@ -167,6 +178,18 @@ void update(const String& payload) {
     lv_label_set_text(titleLabel, titleLine.c_str());
     lv_label_set_text(albumLabel, album);
     lv_label_set_text(playPauseLabel, isPlaying ? LV_SYMBOL_PAUSE : LV_SYMBOL_PLAY);
+
+    if (shuffleOn) {
+        lv_obj_add_state(shuffleBtn, LV_STATE_CHECKED);
+    } else {
+        lv_obj_clear_state(shuffleBtn, LV_STATE_CHECKED);
+    }
+
+    if (loopOn) {
+        lv_obj_add_state(loopBtn, LV_STATE_CHECKED);
+    } else {
+        lv_obj_clear_state(loopBtn, LV_STATE_CHECKED);
+    }
 
     if (trackId != lastTrackId) {
         loadCover(trackId);

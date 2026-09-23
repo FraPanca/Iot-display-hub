@@ -38,7 +38,7 @@ void showDay(JsonObject day) {
     lv_img_set_src(iconObj, iconForCondition(condition));
 
     char buf[32];
-    snprintf(buf, sizeof(buf), "%.0f / %.0f C", tempMin, tempMax);
+    snprintf(buf, sizeof(buf), "%.0f / %.0f°C", tempMin, tempMax);
     lv_label_set_text(tempLabel, buf);
     snprintf(buf, sizeof(buf), "Pioggia %d%%", precipProb);
     lv_label_set_text(precipLabel, buf);
@@ -54,7 +54,7 @@ void showCurrent(JsonObject current) {
     lv_img_set_src(iconObj, iconForCondition(condition));
 
     char buf[32];
-    snprintf(buf, sizeof(buf), "%.1f C", temp);
+    snprintf(buf, sizeof(buf), "%.1f°C", temp);
     lv_label_set_text(tempLabel, buf);
     snprintf(buf, sizeof(buf), "Umidità %d%%", humidity);
     lv_label_set_text(humidityLabel, buf);

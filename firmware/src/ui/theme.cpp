@@ -8,6 +8,10 @@ lv_style_t styleBtnMain;
 lv_style_t styleBtnChecked;
 bool buttonStyleInitialized = false;
 
+lv_style_t styleToggleMain;
+lv_style_t styleToggleChecked;
+bool toggleStyleInitialized = false;
+
 }
 
 void styleTile(lv_obj_t* tile) {
@@ -39,6 +43,29 @@ void styleButton(lv_obj_t* btn) {
     lv_obj_add_style(btn, &styleBtnMain, LV_PART_MAIN);
     lv_obj_add_style(btn, &styleBtnChecked, (lv_style_selector_t)(LV_PART_MAIN | LV_STATE_CHECKED));
     lv_obj_add_style(btn, &styleBtnChecked, (lv_style_selector_t)(LV_PART_MAIN | LV_STATE_PRESSED));
+}
+
+void styleToggleButton(lv_obj_t* btn) {
+    if (!toggleStyleInitialized) {
+        lv_style_init(&styleToggleMain);
+        lv_style_set_bg_color(&styleToggleMain, lv_color_hex(SURFACE));
+        lv_style_set_bg_opa(&styleToggleMain, LV_OPA_COVER);
+        lv_style_set_border_width(&styleToggleMain, 0);
+        lv_style_set_radius(&styleToggleMain, 14);
+        lv_style_set_shadow_width(&styleToggleMain, 0);
+        lv_style_set_text_color(&styleToggleMain, lv_color_hex(TEXT_PRIMARY));
+        lv_style_set_pad_all(&styleToggleMain, 10);
+
+        lv_style_init(&styleToggleChecked);
+        lv_style_set_bg_color(&styleToggleChecked, lv_color_hex(ACCENT_BLUE));
+        lv_style_set_bg_opa(&styleToggleChecked, LV_OPA_COVER);
+        lv_style_set_text_color(&styleToggleChecked, lv_color_hex(TEXT_PRIMARY));
+
+        toggleStyleInitialized = true;
+    }
+
+    lv_obj_add_style(btn, &styleToggleMain, LV_PART_MAIN);
+    lv_obj_add_style(btn, &styleToggleChecked, (lv_style_selector_t)(LV_PART_MAIN | LV_STATE_CHECKED));
 }
 
 lv_color_t dividerColor() {

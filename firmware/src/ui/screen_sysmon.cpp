@@ -71,7 +71,7 @@ void update(const String& payload) {
     lv_label_set_text(memLabel, buf);
     snprintf(buf, sizeof(buf), "DISK %.0f%%", (double)doc["disk_percent"]);
     lv_label_set_text(diskLabel, buf);
-    snprintf(buf, sizeof(buf), "%.1f C", (double)doc["temp_c"]);
+    snprintf(buf, sizeof(buf), "%.1f°C", (double)doc["temp_c"]);
     lv_label_set_text(tempLabel, buf);
 
     lv_obj_clean(servicesList);
