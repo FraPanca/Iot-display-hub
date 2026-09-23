@@ -1,14 +1,7 @@
 #include "screen_weather.h"
 #include "../network/mqtt_manager.h"
+#include "../assets/icons/weather_icons.h"
 #include <ArduinoJson.h>
-
-LV_IMG_DECLARE(icon_clear);
-LV_IMG_DECLARE(icon_partly_cloudy);
-LV_IMG_DECLARE(icon_cloudy);
-LV_IMG_DECLARE(icon_rain);
-LV_IMG_DECLARE(icon_thunderstorm);
-LV_IMG_DECLARE(icon_snow);
-LV_IMG_DECLARE(icon_fog);
 
 namespace screen_weather {
 

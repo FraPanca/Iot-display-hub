@@ -2,8 +2,6 @@
 #define _ST77922_TOUCH_H_
 
 #include "Arduino.h"
-#include "driver/i2s_std.h"
-//#include "driver/i2c_master.h"
 #include <Wire.h>  
 #include "hal/gpio_ll.h"
 

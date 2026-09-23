@@ -4,6 +4,7 @@
 #include "network/mqtt_manager.h"
 #include "ota/ota_manager.h"
 #include "ui/ui_manager.h"
+#include "assets/icons/weather_icons.h"
 #include <ST77922.h>
 #include <ST77922_Touch.h>
 #include "lvgl.h"
@@ -74,6 +75,9 @@ void initDisplay() {
     lv_indev_drv_init(&indevDrv);
     indevDrv.type = LV_INDEV_TYPE_POINTER;
     indevDrv.read_cb = touchpadRead;
+    // Alzato a 2s per le conferme di spegnimento/aggiornamento in screen_power.
+    // Le altre schermate usano solo LV_EVENT_CLICKED, non impattate.
+    indevDrv.long_press_time = 2000;
     lv_indev_drv_register(&indevDrv);
 }
 
@@ -83,6 +87,7 @@ void setup() {
     Serial.begin(115200);
 
     initDisplay();
+    weather_icons_init();
 
     wifi_manager::begin();
     mqtt_manager::setScreenDataCallback(ui_manager::dispatch);

@@ -69,13 +69,9 @@ void create(lv_obj_t* parent) {
     pinMode(LCD_BL_PIN, OUTPUT);
     digitalWrite(LCD_BL_PIN, HIGH);
 
-    // Tempo di pressione prolungata alzato a 2s per le conferme di
-    // spegnimento e aggiornamento. Vale per tutti gli indev, ma le altre
-    // schermate usano solo LV_EVENT_CLICKED, quindi non sono impattate.
-    lv_indev_t* indev = lv_indev_get_next(nullptr);
-    if (indev != nullptr) {
-        lv_indev_set_long_press_time(indev, 2000);
-    }
+    // Tempo di pressione prolungata (2s) impostato in main.cpp sul driver
+    // indev prima della registrazione, vale per tutte le schermate ma solo
+    // qui si ascolta LV_EVENT_LONG_PRESSED.
 
     lv_obj_add_flag(parent, LV_OBJ_FLAG_EVENT_BUBBLE);
     lv_obj_add_event_cb(parent, tilePressedCb, LV_EVENT_PRESSED, nullptr);
