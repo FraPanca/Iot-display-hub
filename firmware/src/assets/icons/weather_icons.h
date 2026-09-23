@@ -2,10 +2,8 @@
 
 #include "lvgl.h"
 
-// Icone meteo placeholder (quadrati a tinta unita), da sostituire con le
-// icone reali convertite tramite l'image converter LVGL una volta pronte
-// le immagini sorgente.
-// Bastano a rendere il progetto linkabile e testabile nel frattempo.
+// Icone meteo reali (Tabler Icons, MIT), rasterizzate 64x64 RGB565 con
+// byte swap per LV_COLOR_16_SWAP. Dettagli pipeline in Attribution.md.
 
 extern lv_img_dsc_t icon_clear;
 extern lv_img_dsc_t icon_partly_cloudy;

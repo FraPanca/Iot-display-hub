@@ -94,9 +94,12 @@ void create(lv_obj_t* parent) {
     lv_obj_set_style_bg_opa(topArea, LV_OPA_TRANSP, LV_PART_MAIN);
     lv_obj_set_flex_flow(topArea, LV_FLEX_FLOW_ROW);
     lv_obj_set_flex_align(topArea, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_style_pad_left(topArea, 16, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(topArea, 16, LV_PART_MAIN);
 
     iconObj = lv_img_create(topArea);
-    lv_obj_set_size(iconObj, LV_PCT(35), LV_PCT(90));
+    lv_obj_set_size(iconObj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+    lv_img_set_zoom(iconObj, 420);
 
     lv_obj_t* infoCol = lv_obj_create(topArea);
     lv_obj_set_size(infoCol, LV_PCT(60), LV_PCT(90));
