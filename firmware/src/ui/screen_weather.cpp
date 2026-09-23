@@ -1,6 +1,7 @@
 #include "screen_weather.h"
 #include "../network/mqtt_manager.h"
 #include "../assets/icons/weather_icons.h"
+#include "theme.h"
 #include <ArduinoJson.h>
 
 namespace screen_weather {
@@ -104,13 +105,17 @@ void create(lv_obj_t* parent) {
     lv_obj_set_flex_flow(infoCol, LV_FLEX_FLOW_COLUMN);
 
     tempLabel = lv_label_create(infoCol);
+    lv_obj_set_style_text_font(tempLabel, &lv_font_montserrat_24, LV_PART_MAIN);
     humidityLabel = lv_label_create(infoCol);
+    theme::styleSecondaryText(humidityLabel);
     windLabel = lv_label_create(infoCol);
+    theme::styleSecondaryText(windLabel);
     precipLabel = lv_label_create(infoCol);
+    theme::styleSecondaryText(precipLabel);
 
     lv_obj_t* divider = lv_obj_create(parent);
     lv_obj_set_size(divider, LV_PCT(95), 2);
-    lv_obj_set_style_bg_color(divider, lv_palette_main(LV_PALETTE_GREY), LV_PART_MAIN);
+    lv_obj_set_style_bg_color(divider, theme::dividerColor(), LV_PART_MAIN);
     lv_obj_set_style_border_width(divider, 0, LV_PART_MAIN);
 
     lv_obj_t* bottomArea = lv_obj_create(parent);
@@ -123,6 +128,7 @@ void create(lv_obj_t* parent) {
     static const char* dayPlaceholders[5] = { "Oggi", "+1", "+2", "+3", "+4" };
     for (int i = 0; i < 5; i++) {
         lv_obj_t* btn = lv_btn_create(bottomArea);
+        theme::styleButton(btn);
         lv_obj_set_size(btn, LV_PCT(17), LV_PCT(80));
         lv_obj_add_flag(btn, LV_OBJ_FLAG_CHECKABLE);
         lv_obj_add_event_cb(btn, dayButtonEventCb, LV_EVENT_CLICKED, (void*)(intptr_t)i);

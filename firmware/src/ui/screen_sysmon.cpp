@@ -1,4 +1,5 @@
 #include "screen_sysmon.h"
+#include "theme.h"
 #include <ArduinoJson.h>
 
 namespace screen_sysmon {
@@ -40,7 +41,7 @@ void create(lv_obj_t* parent) {
 
     lv_obj_t* divider = lv_obj_create(parent);
     lv_obj_set_size(divider, LV_PCT(90), 2);
-    lv_obj_set_style_bg_color(divider, lv_palette_main(LV_PALETTE_GREY), LV_PART_MAIN);
+    lv_obj_set_style_bg_color(divider, theme::dividerColor(), LV_PART_MAIN);
     lv_obj_set_style_border_width(divider, 0, LV_PART_MAIN);
 
     servicesList = lv_obj_create(parent);

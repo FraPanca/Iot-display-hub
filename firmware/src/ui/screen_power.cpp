@@ -2,6 +2,7 @@
 #include "../network/mqtt_manager.h"
 #include "../ota/ota_manager.h"
 #include "ui_manager.h"
+#include "theme.h"
 #include <ArduinoJson.h>
 
 namespace screen_power {
@@ -21,7 +22,7 @@ void setBacklight(bool on) {
     backlightOff = !on;
 }
 
-// Un tocco mentre il backlight e' spento serve solo a riaccenderlo, non deve
+// Un tocco mentre il backlight è spento serve solo a riaccenderlo, non deve
 // anche attivare il bottone sottostante alla stessa pressione.
 void tilePressedCb(lv_event_t* e) {
     if (!backlightOff) return;
@@ -46,7 +47,7 @@ void shutdownPiCb(lv_event_t* e) {
 
 void updateFwCb(lv_event_t* e) {
     lv_label_set_text(statusLabel, "Aggiornamento in corso...");
-    // startUpdate() e' bloccante (download e flash sincroni): il display
+    // startUpdate() è bloccante (download e flash sincroni): il display
     // resta fermo sull'ultimo frame disegnato finche' non riavvia da solo
     // o la chiamata ritorna false. Nessuna barra di progresso live possibile
     // senza rendere ota_manager cooperativo con lv_timer_handler().
@@ -78,20 +79,24 @@ void create(lv_obj_t* parent) {
 
     lv_obj_set_flex_flow(parent, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_flex_align(parent, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_style_pad_row(parent, 28, LV_PART_MAIN);
 
     lv_obj_t* displayBtn = lv_btn_create(parent);
+    theme::styleButton(displayBtn);
     lv_obj_add_flag(displayBtn, LV_OBJ_FLAG_EVENT_BUBBLE);
     lv_obj_add_event_cb(displayBtn, turnOffDisplayCb, LV_EVENT_CLICKED, nullptr);
     lv_obj_t* displayLabel = lv_label_create(displayBtn);
     lv_label_set_text(displayLabel, "Spegni display");
 
     lv_obj_t* shutdownPiBtn = lv_btn_create(parent);
+    theme::styleButton(shutdownPiBtn);
     lv_obj_add_flag(shutdownPiBtn, LV_OBJ_FLAG_EVENT_BUBBLE);
     lv_obj_add_event_cb(shutdownPiBtn, shutdownPiCb, LV_EVENT_LONG_PRESSED, nullptr);
     lv_obj_t* shutdownLabel = lv_label_create(shutdownPiBtn);
     lv_label_set_text(shutdownLabel, "Tieni premuto: spegni Raspberry Pi");
 
     updateFwBtn = lv_btn_create(parent);
+    theme::styleButton(updateFwBtn);
     lv_obj_add_flag(updateFwBtn, LV_OBJ_FLAG_EVENT_BUBBLE);
     lv_obj_add_event_cb(updateFwBtn, updateFwCb, LV_EVENT_LONG_PRESSED, nullptr);
     lv_obj_t* updateLabel = lv_label_create(updateFwBtn);

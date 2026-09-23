@@ -7,6 +7,7 @@
 #include "screen_sysmon.h"
 #include "screen_quote.h"
 #include "screen_power.h"
+#include "theme.h"
 #include "lvgl.h"
 
 namespace ui_manager {
@@ -14,7 +15,7 @@ namespace ui_manager {
 namespace {
 
 // Le sei schermate navigabili col tileview. SCREEN_OFF non compare qui:
-// non ha una tile propria, è un valore pubblicato da screen_power.
+// non ha una tile propria, e' un valore pubblicato da screen_power.
 const int SCREEN_COUNT = 6;
 
 typedef void (*CreateFn)(lv_obj_t*);
@@ -38,15 +39,6 @@ const ScreenEntry SCREENS[SCREEN_COUNT] = {
 lv_obj_t* tileview = nullptr;
 int activeIndex = 0;
 
-void styleTile(lv_obj_t* tile) {
-    lv_obj_set_style_bg_color(tile, lv_color_hex(0x101418), LV_PART_MAIN);
-    lv_obj_set_style_bg_opa(tile, LV_OPA_COVER, LV_PART_MAIN);
-    lv_obj_set_style_border_width(tile, 0, LV_PART_MAIN);
-    // Colore testo chiaro, ereditato dai figli (label, ecc.) per default
-    // di stile LVGL, cosi non serve impostarlo schermata per schermata.
-    lv_obj_set_style_text_color(tile, lv_color_hex(0xE8E8E8), LV_PART_MAIN);
-}
-
 void tileviewEventCb(lv_event_t* e) {
     lv_obj_t* tv = lv_event_get_target(e);
     lv_obj_t* activeTile = lv_tileview_get_tile_act(tv);
@@ -69,7 +61,7 @@ void init() {
     for (int i = 0; i < SCREEN_COUNT; i++) {
         lv_obj_t* tile = lv_tileview_add_tile(tileview, i, 0, LV_DIR_HOR);
         lv_obj_set_user_data(tile, (void*)(intptr_t)i);
-        styleTile(tile);
+        theme::styleTile(tile);
         SCREENS[i].create(tile);
     }
 

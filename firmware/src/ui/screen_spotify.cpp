@@ -1,6 +1,7 @@
 #include "screen_spotify.h"
 #include "../http/cover_fetcher.h"
 #include "../network/mqtt_manager.h"
+#include "theme.h"
 #include <ArduinoJson.h>
 
 namespace screen_spotify {
@@ -26,6 +27,7 @@ void controlEventCb(lv_event_t* e) {
 
 lv_obj_t* makeControlBtn(lv_obj_t* parent, const char* symbol, const char* action) {
     lv_obj_t* btn = lv_btn_create(parent);
+    theme::styleButton(btn);
     lv_obj_add_event_cb(btn, controlEventCb, LV_EVENT_CLICKED, (void*)action);
 
     lv_obj_t* label = lv_label_create(btn);
@@ -78,32 +80,51 @@ void loadCover(const String& trackId) {
 }
 
 void create(lv_obj_t* parent) {
-    lv_obj_set_flex_flow(parent, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_flow(parent, LV_FLEX_FLOW_COLUMN);
 
-    coverImg = lv_img_create(parent);
+    lv_obj_t* topRow = lv_obj_create(parent);
+    lv_obj_set_size(topRow, LV_PCT(100), COVER_SIZE + 24);
+    lv_obj_set_style_bg_opa(topRow, LV_OPA_TRANSP, LV_PART_MAIN);
+    lv_obj_set_style_border_width(topRow, 0, LV_PART_MAIN);
+    lv_obj_set_flex_flow(topRow, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(topRow, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_style_pad_column(topRow, 18, LV_PART_MAIN);
+    lv_obj_set_style_pad_left(topRow, 12, LV_PART_MAIN);
+
+    coverImg = lv_img_create(topRow);
     lv_obj_set_size(coverImg, COVER_SIZE, COVER_SIZE);
+    lv_obj_set_style_radius(coverImg, 10, LV_PART_MAIN);
+    lv_obj_set_style_clip_corner(coverImg, true, LV_PART_MAIN);
 
-    lv_obj_t* infoCol = lv_obj_create(parent);
-    lv_obj_set_size(infoCol, LV_PCT(55), LV_PCT(90));
-    lv_obj_set_style_border_width(infoCol, 0, LV_PART_MAIN);
-    lv_obj_set_style_bg_opa(infoCol, LV_OPA_TRANSP, LV_PART_MAIN);
-    lv_obj_set_flex_flow(infoCol, LV_FLEX_FLOW_COLUMN);
+    lv_obj_t* textCol = lv_obj_create(topRow);
+    lv_obj_set_size(textCol, LV_PCT(60), LV_SIZE_CONTENT);
+    lv_obj_set_style_bg_opa(textCol, LV_OPA_TRANSP, LV_PART_MAIN);
+    lv_obj_set_style_border_width(textCol, 0, LV_PART_MAIN);
+    lv_obj_clear_flag(textCol, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_flex_flow(textCol, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_row(textCol, 4, LV_PART_MAIN);
 
-    titleLabel = lv_label_create(infoCol);
+    titleLabel = lv_label_create(textCol);
     lv_obj_set_style_text_font(titleLabel, &lv_font_montserrat_24, LV_PART_MAIN);
+    lv_label_set_long_mode(titleLabel, LV_LABEL_LONG_WRAP);
+    lv_obj_set_width(titleLabel, LV_PCT(100));
     lv_label_set_text(titleLabel, "");
 
-    albumLabel = lv_label_create(infoCol);
+    albumLabel = lv_label_create(textCol);
+    lv_label_set_long_mode(albumLabel, LV_LABEL_LONG_WRAP);
+    lv_obj_set_width(albumLabel, LV_PCT(100));
+    theme::styleSecondaryText(albumLabel);
     lv_label_set_text(albumLabel, "");
 
-    lv_obj_t* controlsRow = lv_obj_create(infoCol);
-    lv_obj_set_size(controlsRow, LV_PCT(100), LV_SIZE_CONTENT);
-    lv_obj_set_style_border_width(controlsRow, 0, LV_PART_MAIN);
+    lv_obj_t* controlsRow = lv_obj_create(parent);
+    lv_obj_set_size(controlsRow, LV_PCT(100), LV_PCT(100));
+    lv_obj_set_flex_grow(controlsRow, 1);
     lv_obj_set_style_bg_opa(controlsRow, LV_OPA_TRANSP, LV_PART_MAIN);
+    lv_obj_set_style_border_width(controlsRow, 0, LV_PART_MAIN);
     lv_obj_set_flex_flow(controlsRow, LV_FLEX_FLOW_ROW);
     lv_obj_set_flex_align(controlsRow, LV_FLEX_ALIGN_SPACE_EVENLY, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
 
-    makeControlBtn(controlsRow, LV_SYMBOL_LOOP, "repeat");
+    // Ordine richiesto: shuffle, prev, play/pause, next, loop
     makeControlBtn(controlsRow, LV_SYMBOL_SHUFFLE, "shuffle");
     makeControlBtn(controlsRow, LV_SYMBOL_PREV, "previous");
 
@@ -111,6 +132,7 @@ void create(lv_obj_t* parent) {
     playPauseLabel = lv_obj_get_child(playPauseBtn, 0);
 
     makeControlBtn(controlsRow, LV_SYMBOL_NEXT, "next");
+    makeControlBtn(controlsRow, LV_SYMBOL_LOOP, "repeat");
 }
 
 void update(const String& payload) {
