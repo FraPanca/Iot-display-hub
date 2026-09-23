@@ -9,6 +9,57 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  firmware-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Verifica che FIRMWARE_VERSION corrisponda al tag
+        run: |
+          DEFINED=$(grep -oP '#define FIRMWARE_VERSION "\K[^"]+' firmware/src/config.h)
+          TAG="${{ github.ref_name }}"
+          if [ "$DEFINED" != "$TAG" ]; then
+            echo "FIRMWARE_VERSION in config.h ($DEFINED) non corrisponde al tag ($TAG)"
+            exit 1
+          fi
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Cache toolchain PlatformIO
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.platformio
+          key: platformio-${{ hashFiles('firmware/platformio.ini') }}
+
+      - name: Installa PlatformIO
+        run: pip install --upgrade platformio
+
+      - name: Prepara secrets.h fittizio (solo per compilare, nessun valore reale)
+        run: cp firmware/src/secrets.h.example firmware/src/secrets.h
+
+      - name: Build firmware (env freenove_cyd35)
+        working-directory: firmware
+        run: pio run -e freenove_cyd35
+
+      - name: Checksum informativo (il server calcola comunque il proprio MD5)
+        working-directory: firmware/.pio/build/freenove_cyd35
+        run: md5sum firmware.bin > firmware.bin.md5
+
+      - name: Pubblica la GitHub Release con firmware.bin
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            firmware/.pio/build/freenove_cyd35/firmware.bin \
+            firmware/.pio/build/freenove_cyd35/firmware.bin.md5 \
+            --title "${{ github.ref_name }}" \
+            --generate-notes
+
   docker-publish:
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 30

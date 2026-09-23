@@ -44,6 +44,32 @@ jobs:
         working-directory: server
         run: npm audit --omit=dev --audit-level=high
 
+  firmware-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Cache toolchain PlatformIO
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.platformio
+          key: platformio-${{ hashFiles('firmware/platformio.ini') }}
+
+      - name: Installa PlatformIO
+        run: pip install --upgrade platformio
+
+      - name: Prepara secrets.h fittizio (solo per compilare, nessun valore reale)
+        run: cp firmware/src/secrets.h.example firmware/src/secrets.h
+
+      - name: Build firmware (env freenove_cyd35)
+        working-directory: firmware
+        run: pio run -e freenove_cyd35
+
   docker-build:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -61,7 +87,7 @@ jobs:
 
   ci-success:
     if: always()
-    needs: [lint, test, audit, docker-build]
+    needs: [lint, test, audit, firmware-build, docker-build]
     runs-on: ubuntu-latest
     steps:
       - name: Verifica esito di tutti i job
