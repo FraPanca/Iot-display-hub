@@ -4,6 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY src ./src
+COPY scripts ./scripts
 COPY tests ./tests
 COPY jest.config.js ./
 

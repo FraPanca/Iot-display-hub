@@ -3,6 +3,7 @@ const express = require('express');
 const { connectDb } = require('./config/db');
 const { connectRedis } = require('./config/redis');
 const { connectMqtt } = require('./mqtt/client');
+const { seedQuotes } = require('../scripts/seedQuotes');
 const { handleScreenChange } = require('./mqtt/screenManager');
 const { handleDaySelect } = require('./screens/weatherScreen');
 const spotifyScreen = require('./screens/spotifyScreen');
@@ -23,6 +24,11 @@ const PORT = process.env.PORT || 3000;
 
 async function start() {
   await connectDb();
+
+  await seedQuotes().catch((err) => {
+    console.error('Errore durante il seed automatico delle frasi', err.message);
+  });
+
   await connectRedis();
 
   connectMqtt({

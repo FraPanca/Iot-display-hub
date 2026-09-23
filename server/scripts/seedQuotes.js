@@ -7,9 +7,9 @@ const Quote = require('../src/models/Quote');
 
 const SOURCE_FILE = path.join(__dirname, 'quotes.txt');
 
-async function seed() {
-  await connectDb();
-
+// Idempotente: controlla ogni frase prima di inserirla, sicura da chiamare
+// ad ogni avvio del server senza creare duplicati.
+async function seedQuotes() {
   const lines = fs.readFileSync(SOURCE_FILE, 'utf-8')
     .split('\n')
     .map((line) => line.trim())
@@ -25,11 +25,22 @@ async function seed() {
     }
   }
 
-  console.log(`Inserite ${inserted} nuove frasi su ${lines.length} lette da ${SOURCE_FILE}`);
+  console.log(`Seed frasi: inserite ${inserted} nuove su ${lines.length} lette da ${SOURCE_FILE}`);
+  return inserted;
+}
+
+// Uso da riga di comando: apre e chiude la propria connessione Mongo.
+async function seedStandalone() {
+  await connectDb();
+  await seedQuotes();
   await mongoose.disconnect();
 }
 
-seed().catch((err) => {
-  console.error('Errore durante il seed delle frasi', err.message);
-  process.exit(1);
-});
+if (require.main === module) {
+  seedStandalone().catch((err) => {
+    console.error('Errore durante il seed delle frasi', err.message);
+    process.exit(1);
+  });
+}
+
+module.exports = { seedQuotes };
