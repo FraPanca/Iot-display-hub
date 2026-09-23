@@ -20,9 +20,12 @@ lv_color_t statusColor(const char* status) {
 }
 
 void create(lv_obj_t* parent) {
+    lv_obj_set_flex_flow(parent, LV_FLEX_FLOW_COLUMN);
+
     lv_obj_t* metricsRow = lv_obj_create(parent);
     lv_obj_set_size(metricsRow, LV_PCT(100), LV_PCT(35));
     lv_obj_set_style_border_width(metricsRow, 0, LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(metricsRow, LV_OPA_TRANSP, LV_PART_MAIN);
     lv_obj_set_flex_flow(metricsRow, LV_FLEX_FLOW_ROW);
     lv_obj_set_flex_align(metricsRow, LV_FLEX_ALIGN_SPACE_EVENLY, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
 
@@ -43,6 +46,7 @@ void create(lv_obj_t* parent) {
     servicesList = lv_obj_create(parent);
     lv_obj_set_size(servicesList, LV_PCT(90), LV_PCT(55));
     lv_obj_set_style_border_width(servicesList, 0, LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(servicesList, LV_OPA_TRANSP, LV_PART_MAIN);
     lv_obj_set_flex_flow(servicesList, LV_FLEX_FLOW_COLUMN);
 }
 
@@ -75,6 +79,7 @@ void update(const String& payload) {
         lv_obj_t* row = lv_obj_create(servicesList);
         lv_obj_set_size(row, LV_PCT(100), LV_SIZE_CONTENT);
         lv_obj_set_style_border_width(row, 0, LV_PART_MAIN);
+        lv_obj_set_style_bg_opa(row, LV_OPA_TRANSP, LV_PART_MAIN);
         lv_obj_set_flex_flow(row, LV_FLEX_FLOW_ROW);
         lv_obj_set_flex_align(row, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
 

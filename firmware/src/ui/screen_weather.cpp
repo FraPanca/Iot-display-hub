@@ -84,9 +84,12 @@ void dayButtonEventCb(lv_event_t* e) {
 }
 
 void create(lv_obj_t* parent) {
+    lv_obj_set_flex_flow(parent, LV_FLEX_FLOW_COLUMN);
+
     lv_obj_t* topArea = lv_obj_create(parent);
     lv_obj_set_size(topArea, LV_PCT(100), LV_PCT(60));
     lv_obj_set_style_border_width(topArea, 0, LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(topArea, LV_OPA_TRANSP, LV_PART_MAIN);
     lv_obj_set_flex_flow(topArea, LV_FLEX_FLOW_ROW);
     lv_obj_set_flex_align(topArea, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
 
@@ -96,6 +99,8 @@ void create(lv_obj_t* parent) {
     lv_obj_t* infoCol = lv_obj_create(topArea);
     lv_obj_set_size(infoCol, LV_PCT(60), LV_PCT(90));
     lv_obj_set_style_border_width(infoCol, 0, LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(infoCol, LV_OPA_TRANSP, LV_PART_MAIN);
+    lv_obj_clear_flag(infoCol, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_set_flex_flow(infoCol, LV_FLEX_FLOW_COLUMN);
 
     tempLabel = lv_label_create(infoCol);
@@ -111,6 +116,7 @@ void create(lv_obj_t* parent) {
     lv_obj_t* bottomArea = lv_obj_create(parent);
     lv_obj_set_size(bottomArea, LV_PCT(100), LV_PCT(40));
     lv_obj_set_style_border_width(bottomArea, 0, LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(bottomArea, LV_OPA_TRANSP, LV_PART_MAIN);
     lv_obj_set_flex_flow(bottomArea, LV_FLEX_FLOW_ROW);
     lv_obj_set_flex_align(bottomArea, LV_FLEX_ALIGN_SPACE_EVENLY, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
 

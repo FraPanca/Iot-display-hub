@@ -86,6 +86,7 @@ void create(lv_obj_t* parent) {
     lv_obj_t* infoCol = lv_obj_create(parent);
     lv_obj_set_size(infoCol, LV_PCT(55), LV_PCT(90));
     lv_obj_set_style_border_width(infoCol, 0, LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(infoCol, LV_OPA_TRANSP, LV_PART_MAIN);
     lv_obj_set_flex_flow(infoCol, LV_FLEX_FLOW_COLUMN);
 
     titleLabel = lv_label_create(infoCol);
@@ -98,6 +99,7 @@ void create(lv_obj_t* parent) {
     lv_obj_t* controlsRow = lv_obj_create(infoCol);
     lv_obj_set_size(controlsRow, LV_PCT(100), LV_SIZE_CONTENT);
     lv_obj_set_style_border_width(controlsRow, 0, LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(controlsRow, LV_OPA_TRANSP, LV_PART_MAIN);
     lv_obj_set_flex_flow(controlsRow, LV_FLEX_FLOW_ROW);
     lv_obj_set_flex_align(controlsRow, LV_FLEX_ALIGN_SPACE_EVENLY, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
 

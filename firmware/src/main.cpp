@@ -12,6 +12,7 @@
 namespace {
 
 bool bootConfirmed = false;
+bool mqttWasConnected = false;
 
 ST77922 tft;
 ST77922_TOUCH touch;
@@ -51,6 +52,8 @@ void initDisplay() {
     // Il pannello e' fisicamente 320x480 (verticale). Rotazione 1 applica
     // la rotazione software della libreria per ottenere 480x320 orizzontale,
     // coerente con SCREEN_WIDTH/SCREEN_HEIGHT in config.h.
+    // DA VERIFICARE su hardware reale: se l'immagine risulta specchiata o
+    // capovolta, provare Set_Rotation(3) invece di 1 su entrambe le righe.
     tft.Set_Rotation(1);
     touch.init();
     touch.Set_Rotation(1);
@@ -100,7 +103,18 @@ void loop() {
     wifi_manager::loop();
     mqtt_manager::loop();
 
-    if (!bootConfirmed && wifi_manager::isConnected() && mqtt_manager::isConnected()) {
+    bool mqttConnected = mqtt_manager::isConnected();
+    if (mqttConnected && !mqttWasConnected) {
+        // Il publish fatto da ui_manager::init() puo' avvenire prima che
+        // MQTT sia davvero connesso (WiFi.begin() e' asincrono) e va perso
+        // in silenzio: MQTTClient::publish() non fa nulla se non connesso.
+        // Ripubblicare qui, ad ogni transizione a connesso, sistema sia il
+        // boot iniziale sia una riconnessione dopo un riavvio del broker.
+        mqtt_manager::publishScreenCurrent(ui_manager::activeScreenId());
+    }
+    mqttWasConnected = mqttConnected;
+
+    if (!bootConfirmed && wifi_manager::isConnected() && mqttConnected) {
         ota_manager::confirmBootIfPending();
         bootConfirmed = true;
     }

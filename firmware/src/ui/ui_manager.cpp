@@ -38,9 +38,13 @@ const ScreenEntry SCREENS[SCREEN_COUNT] = {
 lv_obj_t* tileview = nullptr;
 int activeIndex = 0;
 
-void applyGlobalStyle() {
-    lv_obj_set_style_bg_color(lv_scr_act(), lv_color_hex(0x101418), LV_PART_MAIN);
-    lv_obj_set_style_bg_opa(lv_scr_act(), LV_OPA_COVER, LV_PART_MAIN);
+void styleTile(lv_obj_t* tile) {
+    lv_obj_set_style_bg_color(tile, lv_color_hex(0x101418), LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(tile, LV_OPA_COVER, LV_PART_MAIN);
+    lv_obj_set_style_border_width(tile, 0, LV_PART_MAIN);
+    // Colore testo chiaro, ereditato dai figli (label, ecc.) per default
+    // di stile LVGL, cosi non serve impostarlo schermata per schermata.
+    lv_obj_set_style_text_color(tile, lv_color_hex(0xE8E8E8), LV_PART_MAIN);
 }
 
 void tileviewEventCb(lv_event_t* e) {
@@ -59,14 +63,13 @@ void tileviewEventCb(lv_event_t* e) {
 }
 
 void init() {
-    applyGlobalStyle();
-
     tileview = lv_tileview_create(lv_scr_act());
     lv_obj_set_size(tileview, LV_PCT(100), LV_PCT(100));
 
     for (int i = 0; i < SCREEN_COUNT; i++) {
         lv_obj_t* tile = lv_tileview_add_tile(tileview, i, 0, LV_DIR_HOR);
         lv_obj_set_user_data(tile, (void*)(intptr_t)i);
+        styleTile(tile);
         SCREENS[i].create(tile);
     }
 
