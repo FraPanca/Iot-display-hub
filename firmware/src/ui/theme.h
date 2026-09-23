@@ -25,6 +25,11 @@ void styleButton(lv_obj_t* btn);
 
 lv_color_t dividerColor();
 
+// Colore testo primario esplicito. Da preferire all'eredita dalla tile per
+// le label che sembrano prendere il colore di default del tema LVGL invece
+// di quello ereditato (es. sysmon, spotify).
+void stylePrimaryText(lv_obj_t* label);
+
 // Colore testo secondario, per sottotitoli o valori meno rilevanti del
 // contenuto principale di una schermata (es. nome album sotto al titolo)
 void styleSecondaryText(lv_obj_t* label);

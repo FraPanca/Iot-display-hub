@@ -1,6 +1,7 @@
 #include "screen_weather.h"
 #include "../network/mqtt_manager.h"
 #include "../assets/icons/weather_icons.h"
+#include "../assets/fonts/fonts_it.h"
 #include "theme.h"
 #include <ArduinoJson.h>
 
@@ -55,7 +56,7 @@ void showCurrent(JsonObject current) {
     char buf[32];
     snprintf(buf, sizeof(buf), "%.1f C", temp);
     lv_label_set_text(tempLabel, buf);
-    snprintf(buf, sizeof(buf), "Umidita %d%%", humidity);
+    snprintf(buf, sizeof(buf), "Umidità %d%%", humidity);
     lv_label_set_text(humidityLabel, buf);
     snprintf(buf, sizeof(buf), "Vento %.0f km/h", wind);
     lv_label_set_text(windLabel, buf);
@@ -106,11 +107,15 @@ void create(lv_obj_t* parent) {
 
     tempLabel = lv_label_create(infoCol);
     lv_obj_set_style_text_font(tempLabel, &lv_font_montserrat_24, LV_PART_MAIN);
+    theme::stylePrimaryText(tempLabel);
     humidityLabel = lv_label_create(infoCol);
+    lv_obj_set_style_text_font(humidityLabel, &font_body_it, LV_PART_MAIN);
     theme::styleSecondaryText(humidityLabel);
     windLabel = lv_label_create(infoCol);
+    lv_obj_set_style_text_font(windLabel, &font_body_it, LV_PART_MAIN);
     theme::styleSecondaryText(windLabel);
     precipLabel = lv_label_create(infoCol);
+    lv_obj_set_style_text_font(precipLabel, &font_body_it, LV_PART_MAIN);
     theme::styleSecondaryText(precipLabel);
 
     lv_obj_t* divider = lv_obj_create(parent);

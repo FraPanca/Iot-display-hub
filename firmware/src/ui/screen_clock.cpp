@@ -1,4 +1,5 @@
 #include "screen_clock.h"
+#include "theme.h"
 #include <ArduinoJson.h>
 
 namespace screen_clock {
@@ -10,6 +11,7 @@ namespace {
 void create(lv_obj_t* parent) {
     timeLabel = lv_label_create(parent);
     lv_obj_set_style_text_font(timeLabel, &lv_font_montserrat_48, LV_PART_MAIN);
+    theme::stylePrimaryText(timeLabel);
     lv_label_set_text(timeLabel, "--:--");
     lv_obj_center(timeLabel);
 }

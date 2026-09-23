@@ -1,6 +1,7 @@
 #include "screen_spotify.h"
 #include "../http/cover_fetcher.h"
 #include "../network/mqtt_manager.h"
+#include "../assets/fonts/fonts_it.h"
 #include "theme.h"
 #include <ArduinoJson.h>
 
@@ -105,12 +106,14 @@ void create(lv_obj_t* parent) {
     lv_obj_set_style_pad_row(textCol, 4, LV_PART_MAIN);
 
     titleLabel = lv_label_create(textCol);
-    lv_obj_set_style_text_font(titleLabel, &lv_font_montserrat_24, LV_PART_MAIN);
+    lv_obj_set_style_text_font(titleLabel, &font_title_it, LV_PART_MAIN);
+    theme::stylePrimaryText(titleLabel);
     lv_label_set_long_mode(titleLabel, LV_LABEL_LONG_WRAP);
     lv_obj_set_width(titleLabel, LV_PCT(100));
     lv_label_set_text(titleLabel, "");
 
     albumLabel = lv_label_create(textCol);
+    lv_obj_set_style_text_font(albumLabel, &font_body_it, LV_PART_MAIN);
     lv_label_set_long_mode(albumLabel, LV_LABEL_LONG_WRAP);
     lv_obj_set_width(albumLabel, LV_PCT(100));
     theme::styleSecondaryText(albumLabel);
@@ -124,7 +127,7 @@ void create(lv_obj_t* parent) {
     lv_obj_set_flex_flow(controlsRow, LV_FLEX_FLOW_ROW);
     lv_obj_set_flex_align(controlsRow, LV_FLEX_ALIGN_SPACE_EVENLY, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
 
-    // Ordine richiesto: shuffle, prev, play/pause, next, loop
+    // Ordine: shuffle, prev, play/pause, next, loop
     makeControlBtn(controlsRow, LV_SYMBOL_SHUFFLE, "shuffle");
     makeControlBtn(controlsRow, LV_SYMBOL_PREV, "previous");
 

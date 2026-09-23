@@ -31,9 +31,13 @@ void create(lv_obj_t* parent) {
     lv_obj_set_flex_align(metricsRow, LV_FLEX_ALIGN_SPACE_EVENLY, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
 
     cpuLabel = lv_label_create(metricsRow);
+    theme::stylePrimaryText(cpuLabel);
     memLabel = lv_label_create(metricsRow);
+    theme::stylePrimaryText(memLabel);
     diskLabel = lv_label_create(metricsRow);
+    theme::stylePrimaryText(diskLabel);
     tempLabel = lv_label_create(metricsRow);
+    theme::stylePrimaryText(tempLabel);
     lv_label_set_text(cpuLabel, "CPU --%");
     lv_label_set_text(memLabel, "MEM --%");
     lv_label_set_text(diskLabel, "DISK --%");
@@ -91,6 +95,7 @@ void update(const String& payload) {
         lv_obj_set_style_border_width(dot, 0, LV_PART_MAIN);
 
         lv_obj_t* nameLabel = lv_label_create(row);
+        theme::stylePrimaryText(nameLabel);
         lv_label_set_text(nameLabel, name);
     }
 }

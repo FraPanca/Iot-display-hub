@@ -45,6 +45,10 @@ lv_color_t dividerColor() {
     return lv_color_hex(DIVIDER);
 }
 
+void stylePrimaryText(lv_obj_t* label) {
+    lv_obj_set_style_text_color(label, lv_color_hex(TEXT_PRIMARY), LV_PART_MAIN);
+}
+
 void styleSecondaryText(lv_obj_t* label) {
     lv_obj_set_style_text_color(label, lv_color_hex(TEXT_SECONDARY), LV_PART_MAIN);
 }

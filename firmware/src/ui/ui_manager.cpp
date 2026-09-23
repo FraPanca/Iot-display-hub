@@ -15,7 +15,7 @@ namespace ui_manager {
 namespace {
 
 // Le sei schermate navigabili col tileview. SCREEN_OFF non compare qui:
-// non ha una tile propria, e' un valore pubblicato da screen_power.
+// non ha una tile propria, è un valore pubblicato da screen_power.
 const int SCREEN_COUNT = 6;
 
 typedef void (*CreateFn)(lv_obj_t*);
@@ -45,8 +45,10 @@ void tileviewEventCb(lv_event_t* e) {
 
     for (int i = 0; i < SCREEN_COUNT; i++) {
         if (lv_obj_get_user_data(activeTile) == (void*)(intptr_t)i) {
-            activeIndex = i;
-            mqtt_manager::publishScreenCurrent(SCREEN_ID_STRINGS[SCREENS[i].id]);
+            if (i != activeIndex) {
+                activeIndex = i;
+                mqtt_manager::publishScreenCurrent(SCREEN_ID_STRINGS[SCREENS[i].id]);
+            }
             return;
         }
     }
@@ -65,7 +67,7 @@ void init() {
         SCREENS[i].create(tile);
     }
 
-    lv_obj_add_event_cb(tileview, tileviewEventCb, LV_EVENT_VALUE_CHANGED, nullptr);
+    lv_obj_add_event_cb(tileview, tileviewEventCb, LV_EVENT_SCROLL_END, nullptr);
 
     // Pubblica subito la schermata iniziale (prima tile, clock), cosi il
     // server comincia a pubblicare dati senza aspettare il primo swipe.
